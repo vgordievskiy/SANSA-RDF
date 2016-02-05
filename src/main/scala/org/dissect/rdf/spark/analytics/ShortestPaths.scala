@@ -41,6 +41,7 @@ object ShortestPaths {
     val initialMessage = makeMap()
 
     def vertexProgram(id: VertexId, attr: SPMap, msg: SPMap): SPMap = {
+      println("VERTEX PROGRAM AT " + id)
       addMaps(attr, msg)
     }
 

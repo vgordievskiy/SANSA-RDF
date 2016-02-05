@@ -48,6 +48,8 @@ object App extends Logging {
 
     val landmarks = Seq[Long](1, 2, 3)
     val result = ShortestPaths.run(graph, landmarks)
+    println("RESULT")
+    result.vertices.foreach(x => println(x))
 
 
 
