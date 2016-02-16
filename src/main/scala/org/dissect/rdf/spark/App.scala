@@ -47,7 +47,10 @@ object App extends Logging {
     println("VERTEX ID = " + vertexId.mkString("."))
 
     val landmarks = Seq[Long](1, 2, 3)
-    val result = ShortestPaths.run(graph, landmarks)
+    val result = ShortestPaths2.run(graph, landmarks)
+
+    //val foo = result.mapVertices(x => )
+
     println("RESULT")
     result.vertices.foreach(x => println(x))
 
