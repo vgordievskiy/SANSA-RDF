@@ -34,7 +34,7 @@ object ShortestPaths {
    * each reachable landmark vertex.
    */
   def run[VD, ED: ClassTag](graph: Graph[VD, ED], landmarks: Seq[VertexId]): Graph[SPMap, ED] = {
-    val spGraph = graph.mapVertices { (vid, attr) =>
+    val spGraph: Graph[SPMap, ED] = graph.mapVertices { (vid, attr) =>
       if (landmarks.contains(vid)) makeMap(vid -> 0) else makeMap()
     }
 

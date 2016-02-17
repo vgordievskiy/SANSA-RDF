@@ -61,30 +61,61 @@ object App extends Logging {
 
   def doWork(graph : Graph[String, String], iriToId : RDD[(String, VertexId)]) = {
     //val graph = graphLayout.graph
-    val vertexIds = iriToId.lookup("http://fp7-pp.publicdata.eu/resource/funding/223894-999854564")
+    //val vertexIds = iriToId.lookup("http://fp7-pp.publicdata.eu/resource/funding/223894-999854564")
+    val landmarks = iriToId.lookup("http://fp7-pp.publicdata.eu/resource/project/257943")
 
-    val roundtrip = graph.vertices.lookup(vertexIds(0));
+    val roundtrip = graph.vertices.lookup(landmarks(0));
 
-    println("VERTEX ID = " + vertexIds.mkString("."))
+    println("VERTEX ID = " + landmarks.mkString("."))
     print("Roundtrip iri: " + roundtrip.mkString("."))
 //
-    val landmarks = Seq[Long](1, 2, 3)
-    val result = ShortestPaths2.run(graph, landmarks)
+    //val landmarks = Seq[Long](1, 2, 3)
+    //val landmarks = Seq[Long](
+    val result = ShortestPaths3.run(graph, landmarks)
+
+    result.vertices.foreach {
+      case(v, frontier) => frontier.foreach { path => println(path.asSimplePath()) }
+    }
+
+    //result.vertices.z
+
+//    result.vertices.foreach({case(v, frontier) =>
+//      frontier.foreach(path => print("Path: " + path.asSimplePath().mapV {
+//        x =>
+//          { println("X = " + x)
+//            val r = graph.vertices.lookup(x)
+//            r
+//          }
+//      }))
+//    })
 
     //val foo = result.mapVertices(x => )
+//    val mapped = result.mapVertices({ case(vertexId, map) => vertexId ->
+//      map.values.flatMap(identity).map(p => {
+//        p.asSimplePath().mapV { v => graph.vertices.lookup(v) }
+//        //println("Path" + p.asSimplePath().mapV { v => graph.vertices.lookup(v) })
+//      })
+//    })
 
-    println("RESULT")
-    result.vertices.foreach({ case(vertexId, map) => {
-      map.values.flatMap(identity).foreach(p => {
-        println("Path" + p.asSimplePath()) //.mapV { v => graph.vertices.lookup(v) })
-      })
+    //val human = result.vertices.cogroup(graph.vertices)
+  //val human = result.vertices.leftOuterJoin(graph.vertices)
+    //val human = result.vertices.zip(other)(graph.vertices)
+
+    //human.foreach({ case(v, (frontier, l)) => frontier.foreach(path => print(v + "-" + path.asSimplePath.mapV { x =>  }())) })
+
+    //mapped.vertices.foreach({case (k, v) => println(v)})
+
+//    println("RESULT")
+//    result.vertices.foreach({ case(vertexId, map) => {
+//      map.values.flatMap(identity).foreach(p => {
+//        println("Path" + p.asSimplePath()) //.mapV { v => graph.vertices.lookup(v) })
+//      })
 //        {case (v, d) => {
 //      println("Vertex: " + v)
 //      d.foreach(p => {
 //        p.
 //      })
 //      println(x)
-    }})
 
 
 
