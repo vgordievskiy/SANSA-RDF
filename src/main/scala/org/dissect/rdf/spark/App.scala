@@ -33,6 +33,19 @@ object App extends Logging {
       System.exit(1)
     }
 
+    //val i0 = null.asInstanceOf[NestedPath[Int, String]]
+
+    // ParentLink(NestedPath parent, DiProperty)
+    val i1 = NestedPath[Int, String](None, 1)
+    val i2 = NestedPath(Some(ParentLink(i1, DirectedProperty("bar"))), 2)
+    val nested = NestedPath(Some(ParentLink(i2, DirectedProperty("baz"))), 3)
+
+    val simple = nested.asSimplePath();
+    println(nested)
+    println(simple)
+
+    //System.exit(0)
+
     val fileName = args(0)
     val sparkMasterHost = if(args.length >= 2) args(1) else SparkUtils.SPARK_MASTER
 
@@ -41,18 +54,38 @@ object App extends Logging {
 
     //val file = "C:/Users/Gezimi/Desktop/AKSW/Spark/sparkworkspace/data/nyse.nt"
     val graphLayout = LoadGraph(fileName, sparkContext)
-    val graph = graphLayout.graph
-    val vertexId = graphLayout.iriToId.lookup("http://fp7-pp.publicdata.eu/resource/funding/223894-999854564")
 
-    println("VERTEX ID = " + vertexId.mkString("."))
+    doWork(graphLayout.graph, graphLayout.iriToId)
+    sparkContext.stop()
+  }
 
+  def doWork(graph : Graph[String, String], iriToId : RDD[(String, VertexId)]) = {
+    //val graph = graphLayout.graph
+    val vertexIds = iriToId.lookup("http://fp7-pp.publicdata.eu/resource/funding/223894-999854564")
+
+    val roundtrip = graph.vertices.lookup(vertexIds(0));
+
+    println("VERTEX ID = " + vertexIds.mkString("."))
+    print("Roundtrip iri: " + roundtrip.mkString("."))
+//
     val landmarks = Seq[Long](1, 2, 3)
     val result = ShortestPaths2.run(graph, landmarks)
 
     //val foo = result.mapVertices(x => )
 
     println("RESULT")
-    result.vertices.foreach(x => println(x))
+    result.vertices.foreach({ case(vertexId, map) => {
+      map.values.flatMap(identity).foreach(p => {
+        println("Path" + p.asSimplePath()) //.mapV { v => graph.vertices.lookup(v) })
+      })
+//        {case (v, d) => {
+//      println("Vertex: " + v)
+//      d.foreach(p => {
+//        p.
+//      })
+//      println(x)
+    }})
+
 
 
 
@@ -60,8 +93,6 @@ object App extends Logging {
 
 
     logger.info("Graph stats: " + graph.numVertices + " - " + graph.numEdges)
-
-    sparkContext.stop()
   }
 }
 

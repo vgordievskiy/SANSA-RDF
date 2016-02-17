@@ -7,6 +7,8 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.PairRDDFunctions
 
+//case class SimpleGraphLayout(graph: )
+
 object LoadGraph extends Logging {
 
   //var _graph: Graph[String, String] = null

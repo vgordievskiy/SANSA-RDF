@@ -46,7 +46,7 @@ object ShortestPaths2 {
    */
   def run[VD](graph: Graph[VD, String], landmarks: Seq[VertexId]): Graph[SPMap, String] = {
     val spGraph = graph.mapVertices { (vid, attr) =>
-      if (landmarks.contains(vid)) makeMap(vid -> Set(new NestedPath[VertexId, String](null, vid, null))) else makeMap()
+      if (landmarks.contains(vid)) makeMap(vid -> Set(NestedPath(None, vid))) else makeMap()
     }
 
     val initialMessage = makeMap()
@@ -66,9 +66,9 @@ object ShortestPaths2 {
       //val x = edge.attr
 
       //edge.dstAttr
-      println("MSG: " + edge)
+      //println("MSG: " + edge)
 
-      val tmp = edge.srcAttr.map({case (k, v) => k -> v.map(x => new NestedPath[VertexId, String](x, edge.dstId, new DirectedProperty[String](edge.attr, false)))  })
+      val tmp = edge.srcAttr.map({case (k, v) => k -> v.map(x => NestedPath[VertexId, String](Some(ParentLink(x, DirectedProperty(edge.attr, false))), edge.dstId))  })
 
       val combined = addMaps(edge.dstAttr, tmp)
 
