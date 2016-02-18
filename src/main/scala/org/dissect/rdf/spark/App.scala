@@ -62,19 +62,20 @@ object App extends Logging {
   def doWork(graph : Graph[String, String], iriToId : RDD[(String, VertexId)]) = {
     //val graph = graphLayout.graph
     //val vertexIds = iriToId.lookup("http://fp7-pp.publicdata.eu/resource/funding/223894-999854564")
-    val landmarks = iriToId.lookup("http://fp7-pp.publicdata.eu/resource/project/257943")
+    //val landmarks = iriToId.lookup("http://fp7-pp.publicdata.eu/resource/project/257943")
+    val landmarks = Seq("http://fp7-pp.publicdata.eu/resource/project/257943")
 
-    val roundtrip = graph.vertices.lookup(landmarks(0));
-
-    println("VERTEX ID = " + landmarks.mkString("."))
-    print("Roundtrip iri: " + roundtrip.mkString("."))
+//    val roundtrip = graph.vertices.lookup(landmarks(0));
+//
+//    println("VERTEX ID = " + landmarks.mkString("."))
+//    print("Roundtrip iri: " + roundtrip.mkString("."))
 //
     //val landmarks = Seq[Long](1, 2, 3)
     //val landmarks = Seq[Long](
-    val result = ShortestPaths3.run(graph, landmarks)
+    val result = ShortestPaths4.run(graph, landmarks)
 
     result.vertices.foreach {
-      case(v, frontier) => frontier.foreach { path => println(path.asSimplePath()) }
+      case(i, (v, frontier)) => frontier.foreach { path => println(path.asSimplePath()) }
     }
 
     //result.vertices.z
