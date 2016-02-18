@@ -62,7 +62,7 @@ object ShortestPaths4 {
       val oldFrontier = edge.srcAttr._2
       var newFrontier = oldFrontier.map(item => NestedPath[V, E](Some(ParentLink(item, DirectedProperty(edge.attr, false))), edge.dstAttr._1))
 
-      newFrontier = newFrontier.filter(p => p.asSimplePath().isCycleFree())
+      newFrontier = newFrontier.filter(_.asSimplePath().isCycleFree())
 
       if (edge.dstAttr != newFrontier)
         Iterator((edge.dstId, newFrontier))
