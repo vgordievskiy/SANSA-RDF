@@ -1,15 +1,15 @@
 package org.dissect.rdf.spark.analytics
 
-case class ParentLink[V, E](val target : NestedPath[V, E], val diProperty : DirectedProperty[E])
+case class XParentLink[V, E](val target : XNestedPath[V, E], val diProperty : XDirectedProperty[E])
 
-case class NestedPath[V, E](val parentLink : Option[ParentLink[V, E]] = None, val currentNode : V) {
+case class XNestedPath[V, E](val parentLink : Option[XParentLink[V, E]] = None, val currentNode : V) {
 
   def asSimplePath() : RdfPath[V, E] = {
     val end = currentNode
     var triples = List[Triple[V, E]]()
     var start = null.asInstanceOf[V]
 
-    //var c : Option[ParentLink[V, E]] = Some(ParentLink[V, E](this, null.asInstanceOf[V]))
+    //var c : Option[XParentLink[V, E]] = Some(XParentLink[V, E](this, null.asInstanceOf[V]))
     // There most likely exists some beautiful solution to write this code in a scala idiomatic way. This is left as an exercise to the reader.
     var c = this
     while(c != null) {

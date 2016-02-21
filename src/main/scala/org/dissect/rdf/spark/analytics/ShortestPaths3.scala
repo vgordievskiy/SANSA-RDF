@@ -13,7 +13,7 @@ import scala.Iterator
  */
 object ShortestPaths3 {
   /** Stores a map from the vertex id of a landmark to the distance to that landmark. */
-  type Frontier = Set[NestedPath[VertexId, String]]
+  type Frontier = Set[XNestedPath[VertexId, String]]
 
   //private def makeMap(x: (VertexId, Set[NestedPath[VertexId, String]])*) = Map(x: _*)
 
@@ -49,10 +49,10 @@ object ShortestPaths3 {
   def run[VD](graph: Graph[VD, String], landmarks: Seq[VertexId]): Graph[Frontier, String] = {
 
     val spGraph : Graph[Frontier, String] = graph.mapVertices { (vid, frontier) =>
-      if (landmarks.contains(vid)) Set(NestedPath[VertexId, String](None, vid)) else Set()
+      if (landmarks.contains(vid)) Set(XNestedPath[VertexId, String](None, vid)) else Set()
     }
 
-    val initialMessage: Frontier = Set[NestedPath[VertexId, String]]()
+    val initialMessage: Frontier = Set[XNestedPath[VertexId, String]]()
 
     def vertexProgram(id: VertexId, attr: Frontier, msg: Frontier): Frontier = {
       addFrontiers(attr, msg)
@@ -60,7 +60,7 @@ object ShortestPaths3 {
 
     def sendMessage(edge: EdgeTriplet[Frontier, String]): Iterator[(VertexId, Frontier)] = {
       val oldFrontier = edge.srcAttr
-      var newFrontier = oldFrontier.map(item => NestedPath[VertexId, String](Some(ParentLink(item, DirectedProperty(edge.attr, false))), edge.dstId))
+      var newFrontier = oldFrontier.map(item => XNestedPath[VertexId, String](Some(XParentLink(item, XDirectedProperty(edge.attr, false))), edge.dstId))
 
       newFrontier = newFrontier.filter(p => p.asSimplePath().isCycleFree())
 

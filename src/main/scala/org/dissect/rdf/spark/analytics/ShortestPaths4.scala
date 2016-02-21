@@ -1,11 +1,14 @@
 package org.dissect.rdf.spark.analytics
 
-import scala.reflect.ClassTag
-import org.apache.spark.graphx._
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Optional
 
 import scala.Iterator
+import scala.reflect.ClassTag
+
+import org.aksw.jena_sparql_api_sparql_path2.DirectedProperty
+import org.aksw.jena_sparql_api_sparql_path2.NestedPath
+import org.aksw.jena_sparql_api_sparql_path2.ParentLink
+import org.apache.spark.graphx._
 
 /**
  * Computes shortest paths to the given set of landmark vertices, returning a graph where each
@@ -49,7 +52,7 @@ object ShortestPaths4 {
   def run[V, E : ClassTag](graph: Graph[V, E], landmarks: Seq[V]): Graph[(V, Frontier[V, E]), E] = {
 
     val spGraph : Graph[(V, Frontier[V, E]), E] = graph.mapVertices { (vid, attr) =>
-      attr -> (if (landmarks.contains(attr)) Set(NestedPath[V, E](None, attr)) else Set())
+      attr -> (if (landmarks.contains(attr)) Set(new NestedPath[V, E](Optional.empty(), attr)) else Set())
     }
 
     val initialMessage: Frontier[V, E] = Set[NestedPath[V, E]]()
@@ -60,7 +63,7 @@ object ShortestPaths4 {
 
     def sendMessage(edge: EdgeTriplet[(V, Frontier[V, E]), E]): Iterator[(VertexId, Frontier[V, E])] = {
       val oldFrontier = edge.srcAttr._2
-      var newFrontier = oldFrontier.map(item => NestedPath[V, E](Some(ParentLink(item, DirectedProperty(edge.attr, false))), edge.dstAttr._1))
+      var newFrontier = oldFrontier.map(item => new NestedPath[V, E](Optional.of(new ParentLink[V, E](item, new DirectedProperty[E](edge.attr, false))), edge.dstAttr._1))
 
       newFrontier = newFrontier.filter(_.asSimplePath().isCycleFree())
 

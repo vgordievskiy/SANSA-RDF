@@ -13,9 +13,9 @@ import scala.Iterator
  */
 object ShortestPaths2 {
   /** Stores a map from the vertex id of a landmark to the distance to that landmark. */
-  type SPMap = Map[VertexId, Set[NestedPath[VertexId, String]]]
+  type SPMap = Map[VertexId, Set[XNestedPath[VertexId, String]]]
 
-  private def makeMap(x: (VertexId, Set[NestedPath[VertexId, String]])*) = Map(x: _*)
+  private def makeMap(x: (VertexId, Set[XNestedPath[VertexId, String]])*) = Map(x: _*)
 
   /*
   private def makeMap(x: (VertexId, Int)*) = Map(x: _*)
@@ -46,7 +46,7 @@ object ShortestPaths2 {
    */
   def run[VD](graph: Graph[VD, String], landmarks: Seq[VertexId]): Graph[SPMap, String] = {
     val spGraph = graph.mapVertices { (vid, attr) =>
-      if (landmarks.contains(vid)) makeMap(vid -> Set(NestedPath(None, vid))) else makeMap()
+      if (landmarks.contains(vid)) makeMap(vid -> Set(XNestedPath(None, vid))) else makeMap()
     }
 
     val initialMessage = makeMap()
@@ -68,7 +68,7 @@ object ShortestPaths2 {
       //edge.dstAttr
       //println("MSG: " + edge)
 
-      val tmp = edge.srcAttr.map({case (k, v) => k -> v.map(x => NestedPath[VertexId, String](Some(ParentLink(x, DirectedProperty(edge.attr, false))), edge.dstId))  })
+      val tmp = edge.srcAttr.map({case (k, v) => k -> v.map(x => XNestedPath[VertexId, String](Some(XParentLink(x, XDirectedProperty(edge.attr, false))), edge.dstId))  })
 
       val combined = addMaps(edge.dstAttr, tmp)
 

@@ -22,6 +22,10 @@ import org.dissect.rdf.spark.graph.LoadGraph
 import org.apache.spark.SparkContext._
 import org.apache.spark.rdd.PairRDDFunctions
 import org.apache.jena.sparql.util.NodeUtils
+import org.aksw.jena_sparql_api_sparql_path2.ParentLink
+import org.aksw.jena_sparql_api_sparql_path2.NestedPath
+import org.aksw.jena_sparql_api_sparql_path2.DirectedProperty
+import java.util.Optional
 
 object App extends Logging {
 
@@ -36,9 +40,9 @@ object App extends Logging {
     //val i0 = null.asInstanceOf[NestedPath[Int, String]]
 
     // ParentLink(NestedPath parent, DiProperty)
-    val i1 = NestedPath[Int, String](None, 1)
-    val i2 = NestedPath(Some(ParentLink(i1, DirectedProperty("bar"))), 2)
-    val nested = NestedPath(Some(ParentLink(i2, DirectedProperty("baz"))), 3)
+    val i1 = new NestedPath[Int, String](Optional.empty(), 1) //.asInstanceOf[ParentLink[Int, String]]
+    val i2 = new NestedPath(Optional.of(new ParentLink(i1, new DirectedProperty("bar"))), 2)
+    val nested = new NestedPath(Optional.of(new ParentLink(i2, new DirectedProperty("baz"))), 3)
 
     val simple = nested.asSimplePath();
     println(nested)
