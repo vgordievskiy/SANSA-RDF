@@ -26,6 +26,8 @@ import org.aksw.jena_sparql_api_sparql_path2.ParentLink
 import org.aksw.jena_sparql_api_sparql_path2.NestedPath
 import org.aksw.jena_sparql_api_sparql_path2.DirectedProperty
 import java.util.Optional
+import org.apache.spark.rdd.PairRDDFunctions
+import scala.reflect.ClassTag
 
 object App extends Logging {
 
@@ -40,7 +42,7 @@ object App extends Logging {
     //val i0 = null.asInstanceOf[NestedPath[Int, String]]
 
     // ParentLink(NestedPath parent, DiProperty)
-    val i1 = new NestedPath[Int, String](Optional.empty(), 1) //.asInstanceOf[ParentLink[Int, String]]
+    val i1 = new NestedPath[Int, String](1) //.asInstanceOf[ParentLink[Int, String]]
     val i2 = new NestedPath(Optional.of(new ParentLink(i1, new DirectedProperty("bar"))), 2)
     val nested = new NestedPath(Optional.of(new ParentLink(i2, new DirectedProperty("baz"))), 3)
 
@@ -59,11 +61,36 @@ object App extends Logging {
     //val file = "C:/Users/Gezimi/Desktop/AKSW/Spark/sparkworkspace/data/nyse.nt"
     val graphLayout = LoadGraph(fileName, sparkContext)
 
-    doWork(graphLayout.graph, graphLayout.iriToId)
+    val typedGraph: Graph[(String, Iterable[String]), String] = createTypedGraph(graphLayout.graph, x => "http://www.w3.org/1999/02/22-rdf-syntax-ns#type".equals(x))
+
+    typedGraph.vertices.foreach { println _ }
+
+
+    //val typedV = graph.joinVertices(srcVidToTypeUris)((a, b: String, c) => b)
+
+
+    //doWork(typedGraph, graphLayout.iriToId)
     sparkContext.stop()
   }
 
+  def createTypedGraph[VD : ClassTag, ED : ClassTag](graph: Graph[VD, ED], typePredicate : ED => Boolean) = {
+    val rdfTypeRdd = graph.edges
+      .filter { edge => typePredicate(edge.attr) }
+      .map { x => x.dstId -> x.srcId }
+
+    val srcVidToTypeUris = rdfTypeRdd
+      .join(graph.vertices)
+      .map(x => x._2)
+      .groupByKey()
+
+    val typedVertices: RDD[(VertexId, (VD, Iterable[VD]))] = graph.vertices.join(srcVidToTypeUris)
+
+    val typedGraph: Graph[(VD, Iterable[VD]), ED] = Graph(typedVertices, graph.edges)
+    typedGraph
+  }
+
   def doWork(graph : Graph[String, String], iriToId : RDD[(String, VertexId)]) = {
+
     //val graph = graphLayout.graph
     //val vertexIds = iriToId.lookup("http://fp7-pp.publicdata.eu/resource/funding/223894-999854564")
     //val landmarks = iriToId.lookup("http://fp7-pp.publicdata.eu/resource/project/257943")

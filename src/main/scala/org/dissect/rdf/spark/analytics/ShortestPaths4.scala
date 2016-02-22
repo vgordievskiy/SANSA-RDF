@@ -52,7 +52,7 @@ object ShortestPaths4 {
   def run[V, E : ClassTag](graph: Graph[V, E], landmarks: Seq[V]): Graph[(V, Frontier[V, E]), E] = {
 
     val spGraph : Graph[(V, Frontier[V, E]), E] = graph.mapVertices { (vid, attr) =>
-      attr -> (if (landmarks.contains(attr)) Set(new NestedPath[V, E](Optional.empty(), attr)) else Set())
+      attr -> (if (landmarks.contains(attr)) Set(new NestedPath[V, E](attr)) else Set())
     }
 
     val initialMessage: Frontier[V, E] = Set[NestedPath[V, E]]()
