@@ -80,7 +80,7 @@ object App extends Logging {
 
     val srcVidToTypeUris = rdfTypeRdd
       .join(graph.vertices)
-      .map(x => x._2)
+      .map(_._2)
       .groupByKey()
 
     val typedVertices: RDD[(VertexId, (VD, Iterable[VD]))] = graph.vertices.join(srcVidToTypeUris)
