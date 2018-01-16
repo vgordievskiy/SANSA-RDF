@@ -46,7 +46,7 @@ class RDFToRDDLoadingTests extends FunSuite with SharedSparkContext {
   }
 
   test("loading RDF/XML file into RDD should result in 122 triples") {
-    val path = Paths.get("/tmp/lubm/100").toAbsolutePath.toString
+    val path = Paths.get("/tmp/lubm").toAbsolutePath.toString
 
     val triples = sc.rdfxml(path)
 
