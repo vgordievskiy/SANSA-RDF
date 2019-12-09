@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>sansa-rdf-parent_2.11</artifactId>
+		<artifactId>sansa-rdf-parent_${scala.binary.version}</artifactId>
 		<groupId>net.sansa-stack</groupId>
 		<version>0.6.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>sansa-rdf-common_2.11</artifactId>
+	<artifactId>sansa-rdf-common_${scala.binary.version}</artifactId>
 
 	<dependencies>
 		<dependency>
@@ -76,6 +76,11 @@
 			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>scala-maven-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<scalaCompatVersion>${scala.binary.version}</scalaCompatVersion>
+          <scalaVersion>${scala.version}</scalaVersion>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.scalastyle</groupId>

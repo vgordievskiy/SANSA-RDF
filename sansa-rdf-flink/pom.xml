@@ -14,11 +14,11 @@
 	
 	<parent>
 		<groupId>net.sansa-stack</groupId>
-		<artifactId>sansa-rdf-parent_2.11</artifactId>
+		<artifactId>sansa-rdf-parent_${scala.binary.version}</artifactId>
 		<version>0.6.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>sansa-rdf-flink_2.11</artifactId>
+	<artifactId>sansa-rdf-flink_${scala.binary.version}</artifactId>
 
 	<name>SANSA RDF API - Flink</name>
 	<description>Apache Flink for RDF Layer</description>
