@@ -111,7 +111,7 @@ object TextInputRdfXmlDataSource extends RdfXmlDataSource[Text] {
                          file: PartitionedFile,
                          parser: JenaParser): Iterator[InternalRow] = {
     val linesReader = new HadoopFileLinesReader(file, conf)
-    Option(TaskContext.get()).foreach(_.addTaskCompletionListener(_ => linesReader.close()))
+    Option(TaskContext.get()).foreach(_.addTaskCompletionListener[Unit](_ => linesReader.close()))
     linesReader.flatMap(parser.parse(_, createParser, textToUTF8String))
   }
 
@@ -149,7 +149,7 @@ object WholeFileRdfXmlDataSource extends RdfXmlDataSource[PortableDataStream] {
 
   private def createInputStream(config: Configuration, path: String): InputStream = {
     val inputStream = CodecStreams.createInputStream(config, new Path(path))
-    Option(TaskContext.get()).foreach(_.addTaskCompletionListener(_ => inputStream.close()))
+    Option(TaskContext.get()).foreach(_.addTaskCompletionListener[Unit](_ => inputStream.close()))
     inputStream
   }
 

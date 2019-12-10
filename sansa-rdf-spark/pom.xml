@@ -15,6 +15,8 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>sansa-rdf-common${scala.version.suffix}</artifactId>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../sansa-rdf-common/target/sansa-rdf-common_${scala.binary.version}-${sansa.version}.jar</systemPath>
 			<!-- <classifier>${scala.classifier}</classifier> -->
 		</dependency>
 
@@ -155,6 +157,11 @@
 			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>scala-maven-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<scalaCompatVersion>${scala.binary.version}</scalaCompatVersion>
+					<scalaVersion>${scala.version}</scalaVersion>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

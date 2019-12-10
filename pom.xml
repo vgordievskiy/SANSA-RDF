@@ -93,6 +93,7 @@
 			<java.version>1.8</java.version>
 			<scala.version>2.12.8</scala.version>
 			<scala.binary.version>2.12</scala.binary.version>
+			<sansa.version>0.6.1-SNAPSHOT</sansa.version>
 	</properties>
 
 	<profiles>

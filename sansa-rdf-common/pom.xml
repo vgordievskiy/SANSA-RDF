@@ -79,7 +79,7 @@
 				<version>3.3.2</version>
 				<configuration>
 					<scalaCompatVersion>${scala.binary.version}</scalaCompatVersion>
-          <scalaVersion>${scala.version}</scalaVersion>
+          			<scalaVersion>${scala.version}</scalaVersion>
 				</configuration>
 			</plugin>
 			<plugin>
